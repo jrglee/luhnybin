@@ -8,19 +8,21 @@ object Luhny {
     def maskImpl(cc:String):String = {
       
       def luhn(start:Int, end:Int, sum:Int, cc:List[Boolean], values:List[Int]) : List[Boolean] = {
-        val masked : List[Boolean] = {
-          if (sum % 10 == 0)
-            cc.zipWithIndex map{case (e, i) => if (start <= i && i <= end) true else e} toList
-          else
-            cc
-        }
-        
-        if (end - start >= 14) {
-          luhn(start + 1, end, sum - values(start), masked, values)
+        if (sum % 10 == 0) {
+          val masked = cc.zipWithIndex map{case (e, i) => if (start <= i && i <= end) true else e} toList;
+          if (end <= cc.size - 3) {
+            var adjustedSum = sum + values(end + 1) + values(end + 2);
+            for (i <- start until (end - 11))
+              adjustedSum -= values(i)
+            luhn(end - 11, end + 2, adjustedSum, masked, values) // advance to next 16
+          } else
+            masked
+        } else if (end - start >= 14) {
+          luhn(start + 1, end, sum - values(start), cc, values)
         } else if (end <= cc.size - 3) {
-          luhn(start, end + 2, sum + values(end + 1) + values(end + 2), masked, values)
+          luhn(start, end + 2, sum + values(end + 1) + values(end + 2), cc, values)
         } else {
-          masked
+          cc
         }
       }
 
