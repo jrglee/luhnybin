@@ -8,9 +8,9 @@ object Luhny {
     def maskImpl(cc:String):String = {
       
       def luhn(start:Int, end:Int, sum:Int, cc:List[Boolean], values:List[Int]) : List[Boolean] = {
-        val masked = {
+        val masked : List[Boolean] = {
           if (sum % 10 == 0)
-            cc.zipWithIndex map{case (e, i) => if (start.to(end).contains(i)) true else e} toList
+            cc.zipWithIndex map{case (e, i) => if (start <= i && i <= end) true else e} toList
           else
             cc
         }
@@ -30,24 +30,21 @@ object Luhny {
       // list with even indexes doubled
       val evens = baseValueList.zipWithIndex map {case (e,i) => if (i % 2 == 0) valueMap(e) else e} toList;
       
-      // boolean list with default values
-      val initialList = 0.until(cc.size) map {e => false} toList
-
       // get all possible ccs with list of evens
-      val charMap1 = luhn(0, 13, evens.take(14).sum, initialList, evens)
+      val partialMask = luhn(0, 13, evens.take(14).sum, List.fill[Boolean](cc.size)(false), evens)
       
       // same with list of odds
-      val charMap2 = {
+      val mask = {
         if (cc.size >= 15) {
           // list with odd indexes doubled
           val odds = baseValueList.zipWithIndex map {case (e,i) => if (i % 2 == 0) e else valueMap(e)} toList;
-          luhn(0, 14, odds.take(15).sum, initialList, odds) 
+          luhn(0, 14, odds.take(15).sum, partialMask, odds) 
         } else
-          initialList
+          partialMask
       }
       
       // replace numbers by Xs using boolean maps as references
-      cc.zipWithIndex map{case (c, i) => if (charMap1(i) || charMap2(i)) 'X' else c} mkString;
+      cc.zipWithIndex map{case (c, i) => if (mask(i)) 'X' else c} mkString;
     }
   
     // return if string is not long enough to do anything
