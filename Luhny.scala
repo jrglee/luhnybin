@@ -23,8 +23,6 @@ object Luhny {
           masked
         }
       }
-      
-      def emptyList(size:Int) :List[Boolean] = 0 until size map {e => false} toList
 
       // convert string to list of ints
       val baseValueList = cc map {c => (c - '0').toInt} toList;
@@ -32,18 +30,20 @@ object Luhny {
       // list with even indexes doubled
       val evens = baseValueList.zipWithIndex map {case (e,i) => if (i % 2 == 0) valueMap(e) else e} toList;
       
-      // list with odd indexes doubled
-      val odds = baseValueList.zipWithIndex map {case (e,i) => if (i % 2 == 0) e else valueMap(e)} toList;
-      
+      // boolean list with default values
+      val initialList = 0.until(cc.size) map {e => false} toList
+
       // get all possible ccs with list of evens
-      val charMap1 = luhn(0, 13, evens.take(14).sum, emptyList(cc.size), evens)
+      val charMap1 = luhn(0, 13, evens.take(14).sum, initialList, evens)
       
       // same with list of odds
       val charMap2 = {
-        if (cc.size >= 15)
-          luhn(0, 14, odds.take(15).sum, emptyList(cc.size), odds) 
-        else
-          emptyList(cc.size)
+        if (cc.size >= 15) {
+          // list with odd indexes doubled
+          val odds = baseValueList.zipWithIndex map {case (e,i) => if (i % 2 == 0) e else valueMap(e)} toList;
+          luhn(0, 14, odds.take(15).sum, initialList, odds) 
+        } else
+          initialList
       }
       
       // replace numbers by Xs using boolean maps as references
