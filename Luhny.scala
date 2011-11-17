@@ -46,21 +46,21 @@ object Luhny {
           emptyList(cc.size)
       }
       
-			// replace numbers by Xs using boolean maps as references
+      // replace numbers by Xs using boolean maps as references
       cc.zipWithIndex map{case (c, i) => if (charMap1(i) || charMap2(i)) 'X' else c} mkString;
     }
   
-		// return if string is not long enough to do anything
+    // return if string is not long enough to do anything
     if (cc.size < 14)
       return cc
   
-		// isolate numbers only
+    // isolate numbers only
     val cleanStr = new StringBuilder
 
-		// stores the index of numeric chars
+    // stores the index of numeric chars
     val digits = new MutableList[Int]
     
-		// TODO - rewrite in functional style
+    // TODO - rewrite in functional style
     for (i <- 0 until cc.size) {
       if ('0'.to('9').contains(cc.charAt(i))){
         cleanStr.append(cc(i))
@@ -69,17 +69,17 @@ object Luhny {
     }
     
     if (cleanStr.size >= 14) {
-			// TODO rewrite in functional style
+      // TODO rewrite in functional style
       val masked = new StringBuilder(cc)
       maskImpl(cleanStr.toString).zipWithIndex map {case (c, i) => masked.setCharAt(digits(i), c)}
       masked toString
     } else 
-			cc
+      cc
   }
 
   def main(args:Array[String]) {
     for (ln <- io.Source.stdin.getLines)
-			// windows keep appending \r if using println, this should be good enough to run everywhere
+      // windows keep appending \r if using println, this should be good enough to run everywhere
       print(mask(ln) + "\n")
   }
 }
