@@ -77,9 +77,8 @@ object Luhny {
   }
 
   def main(args:Array[String]) {
-    for (ln <- io.Source.stdin.getLines)
-      // windows keep appending \r if using println, this should be good enough to run everywhere
-      print(mask(ln) + "\n")
+    // windows keep appending \r if using println, this should be good enough to run everywhere
+    Iterator.continually(Console.readLine).takeWhile(_ != null).foreach(ln => print(mask(ln) + "\n"))
   }
 }
 
