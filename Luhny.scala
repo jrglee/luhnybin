@@ -53,24 +53,19 @@ object Luhny {
     if (cc.size < 14)
       return cc
   
-    // isolate numbers only
-    val cleanStr = new StringBuilder
-
-    // stores the index of numeric chars
-    val digits = new MutableList[Int]
+    // determine index of valid numbers
+    val digits = 
+      for {
+        i <- 0 to cc.size - 1
+        c = cc.charAt(i)
+        if ('0' <= c && c <= '9')
+      } yield i
     
-    // TODO - rewrite in functional style
-    for (i <- 0 until cc.size) {
-      if ('0'.to('9').contains(cc.charAt(i))){
-        cleanStr.append(cc(i))
-        digits += i
-      }
-    }
-    
-    if (cleanStr.size >= 14) {
-      // TODO rewrite in functional style
+    if (digits.size >= 14) {
       val masked = new StringBuilder(cc)
-      maskImpl(cleanStr.toString).zipWithIndex map {case (c, i) => masked.setCharAt(digits(i), c)}
+      // call mask function and use them to replace the characters in the original string
+      maskImpl(digits map {cc.charAt(_)} mkString).zipWithIndex map {case (c, i) => masked.setCharAt(digits(i), c)}
+      // return value from string builder
       masked toString
     } else 
       cc
