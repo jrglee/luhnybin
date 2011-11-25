@@ -1,5 +1,3 @@
-import scala.collection.mutable.MutableList
-
 object Luhny {
   private val valueMap = Map(0 -> 0, 1 -> 2, 2 -> 4, 3 -> 6, 4 -> 8, 5 -> 1, 6 -> 3, 7 -> 5, 8 -> 7, 9 -> 9)
 
@@ -49,10 +47,6 @@ object Luhny {
       cc.zipWithIndex map{case (c, i) => if (mask(i)) 'X' else c} mkString;
     }
   
-    // return if string is not long enough to do anything
-    if (cc.size < 14)
-      return cc
-  
     // determine index of valid numbers
     val digits = 
       for {
@@ -76,4 +70,3 @@ object Luhny {
     Iterator.continually(Console.readLine).takeWhile(_ != null).foreach(ln => print(mask(ln) + "\n"))
   }
 }
-
